@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 
@@ -8,20 +8,67 @@ function Tooltip(props) {
   const [open, setOpen] = useState(false);
 
   const REF = useRef();
+  const ToolTipREF = useRef();
   const CLEARTIMEOUT = useRef(null);
+
+  useLayoutEffect(() => {
+    if (open) {
+      let MIDDLE =
+        document.getElementById("toolTip").firstChild.getBoundingClientRect()
+          .left +
+        document.getElementById("toolTip").firstChild.getBoundingClientRect()
+          .width /
+          2;
+      let TOP =
+        document.getElementById("toolTip").firstChild.getBoundingClientRect()
+          .bottom + 10;
+      let LEFT = MIDDLE - ToolTipREF.current.getBoundingClientRect().width / 2;
+
+      if(TOP > window.innerHeight)
+      {
+        TOP =
+        document.getElementById("toolTip").firstChild.getBoundingClientRect()
+          .top -  ToolTipREF.current.getBoundingClientRect().height - 10;
+      }
+
+      console.log('LEFT',LEFT + ToolTipREF.current.getBoundingClientRect().width   ,window.innerWidth )
+
+      if(LEFT < 0 ||(LEFT + ToolTipREF.current.getBoundingClientRect().width ) >=window.innerWidth)
+      {
+            if(LEFT < 0)
+            {
+              LEFT = document.getElementById("toolTip").firstChild.getBoundingClientRect().right + 20;
+              TOP = document.getElementById("toolTip").firstChild.getBoundingClientRect().top +  (document.getElementById("toolTip").firstChild.getBoundingClientRect().height /2)
+            }
+
+            if((LEFT + ToolTipREF.current.getBoundingClientRect().width ) > window.innerWidth)
+            {
+              console.log('innnn')
+              TOP = document.getElementById("toolTip").firstChild.getBoundingClientRect().top +  (document.getElementById("toolTip").firstChild.getBoundingClientRect().height /2)
+              LEFT = document.getElementById("toolTip").firstChild.getBoundingClientRect().left - ToolTipREF.current.getBoundingClientRect().width - 20;
+
+
+            }
+      }
+
+      ToolTipREF.current.style.visibility = "visible";
+      ToolTipREF.current.style.top = `${TOP}px`;
+      ToolTipREF.current.style.left = `${LEFT}px`;
+    }
+  }, [open]);
 
   const handleMouseEnter = () => {
     CLEARTIMEOUT.current = setTimeout(() => {
-      console.log("innnnnn");
       setOpen(true);
     }, 300);
 
-    console.log(REF.current.getBoundingClientRect());
+    console.log(
+      document.getElementById("toolTip").firstChild.getBoundingClientRect()
+    );
   };
 
   const handleMouseLeave = () => {
     if (CLEARTIMEOUT.current && !open) {
-      console.log("Clear Timeout");
       clearTimeout(CLEARTIMEOUT.current);
       return;
     }
@@ -38,12 +85,15 @@ function Tooltip(props) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ display: "inline-block" }}
+      id="toolTip"
     >
       {props.children}
       {open &&
         createPortal(
-          <Parent>
-            <TitleSpan>{title}</TitleSpan>
+          <Parent ref={ToolTipREF} style={{ visibility: "hidden" }}>
+            <TitleWrapper>
+              <TitleSpan>{title}</TitleSpan>
+            </TitleWrapper>
           </Parent>,
           document.body
         )}
@@ -54,6 +104,17 @@ function Tooltip(props) {
 const Parent = styled.div`
   position: absolute;
   z-index: 100;
+  display: inline-block;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  width: 300px;
+  height: 45px;
+  background-color: red;
 `;
 
 const TitleSpan = styled.span`
