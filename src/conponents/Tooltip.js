@@ -31,8 +31,6 @@ function Tooltip(props) {
           .top -  ToolTipREF.current.getBoundingClientRect().height - 10;
       }
 
-      console.log('LEFT',LEFT + ToolTipREF.current.getBoundingClientRect().width   ,window.innerWidth )
-
       if(LEFT < 0 ||(LEFT + ToolTipREF.current.getBoundingClientRect().width ) >=window.innerWidth)
       {
             if(LEFT < 0)
@@ -43,10 +41,8 @@ function Tooltip(props) {
 
             if((LEFT + ToolTipREF.current.getBoundingClientRect().width ) > window.innerWidth)
             {
-              console.log('innnn')
               TOP = document.getElementById("toolTip").firstChild.getBoundingClientRect().top +  (document.getElementById("toolTip").firstChild.getBoundingClientRect().height /2)
               LEFT = document.getElementById("toolTip").firstChild.getBoundingClientRect().left - ToolTipREF.current.getBoundingClientRect().width - 20;
-
 
             }
       }
@@ -61,10 +57,6 @@ function Tooltip(props) {
     CLEARTIMEOUT.current = setTimeout(() => {
       setOpen(true);
     }, 300);
-
-    console.log(
-      document.getElementById("toolTip").firstChild.getBoundingClientRect()
-    );
   };
 
   const handleMouseLeave = () => {
