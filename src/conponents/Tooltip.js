@@ -14,20 +14,20 @@ function Tooltip(props) {
   useLayoutEffect(() => {
     if (open) {
       let MIDDLE =
-        document.getElementById("toolTip").firstChild.getBoundingClientRect()
+        REF.current.firstChild.getBoundingClientRect()
           .left +
-        document.getElementById("toolTip").firstChild.getBoundingClientRect()
+        REF.current.firstChild.getBoundingClientRect()
           .width /
           2;
       let TOP =
-        document.getElementById("toolTip").firstChild.getBoundingClientRect()
+        REF.current.firstChild.getBoundingClientRect()
           .bottom + 10;
       let LEFT = MIDDLE - ToolTipREF.current.getBoundingClientRect().width / 2;
 
       if(TOP > window.innerHeight)
       {
         TOP =
-        document.getElementById("toolTip").firstChild.getBoundingClientRect()
+        REF.current.firstChild.getBoundingClientRect()
           .top -  ToolTipREF.current.getBoundingClientRect().height - 10;
       }
 
@@ -35,14 +35,14 @@ function Tooltip(props) {
       {
             if(LEFT < 0)
             {
-              LEFT = document.getElementById("toolTip").firstChild.getBoundingClientRect().right + 20;
-              TOP = document.getElementById("toolTip").firstChild.getBoundingClientRect().top +  (document.getElementById("toolTip").firstChild.getBoundingClientRect().height /2)
+              LEFT = REF.current.firstChild.getBoundingClientRect().right + 20;
+              TOP = REF.current.firstChild.getBoundingClientRect().top +  (REF.current.firstChild.getBoundingClientRect().height /2)
             }
 
             if((LEFT + ToolTipREF.current.getBoundingClientRect().width ) > window.innerWidth)
             {
-              TOP = document.getElementById("toolTip").firstChild.getBoundingClientRect().top +  (document.getElementById("toolTip").firstChild.getBoundingClientRect().height /2)
-              LEFT = document.getElementById("toolTip").firstChild.getBoundingClientRect().left - ToolTipREF.current.getBoundingClientRect().width - 20;
+              TOP = REF.current.firstChild.getBoundingClientRect().top +  (REF.current.firstChild.getBoundingClientRect().height /2)
+              LEFT = REF.current.firstChild.getBoundingClientRect().left - ToolTipREF.current.getBoundingClientRect().width - 20;
 
             }
       }
@@ -77,7 +77,6 @@ function Tooltip(props) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ display: "inline-block" }}
-      id="toolTip"
     >
       {props.children}
       {open &&
