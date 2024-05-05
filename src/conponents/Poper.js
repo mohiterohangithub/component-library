@@ -13,7 +13,6 @@ function Poper(props) {
   return (
     <Parent ref={REF}>
       <input onFocus={()=> setOpen(true)} style={{ width: "100%", height: "100%" }} placeholder="Search" />
-
       {open && (
         <div
           ref={ChildREF}
