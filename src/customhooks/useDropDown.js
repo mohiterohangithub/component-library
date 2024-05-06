@@ -5,7 +5,7 @@ function useDropDown(parentREF, childREF, open) {
     if (open) {
       if (
         window.innerHeight - 10 <
-          childREF.current.getBoundingClientRect().bottom &&
+        childREF.current.getBoundingClientRect().bottom &&
         childREF.current.style.top
       ) {
         childREF.current.style.removeProperty("top");
@@ -22,7 +22,6 @@ function useDropDown(parentREF, childREF, open) {
 
   useEffect(() => {
     window.addEventListener("scroll", scrollWindows);
-
     return () => window.removeEventListener("scroll", scrollWindows);
   }, [parentREF.current, childREF.current]);
 }

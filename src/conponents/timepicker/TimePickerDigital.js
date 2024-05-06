@@ -39,8 +39,8 @@ function TimePickerDigital(props) {
   const ParentREF = useRef(null);
   const ChildREF = useRef(null);
 
-  const [minutes, setMinutes] = useState(dayjs(new Date()).format("hh"));
-  const [hour, setHour] = useState(dayjs(new Date()).format("mm"));
+  const [minutes, setMinutes] = useState(dayjs(new Date()).format("mm"));
+  const [hour, setHour] = useState(dayjs(new Date()).format("hh"));
   const [ampm, setAMPM] = useState(dayjs(new Date()).format("a"));
   const [open, setOpen] = useState(false);
 
@@ -56,20 +56,12 @@ function TimePickerDigital(props) {
   const MinutesArray = useMemo(() => {
     return generateMinutesArray();
   }, []);
-
-  console.log(
-    "HoursArray, MinutesArray",
-    HoursArray,
-    MinutesArray,
-    hour,
-    minutes,
-    ampm
-  );
   const handleHour = (e) => {
     let hour = e.target.getAttribute("data-hour");
 
     if (hour) {
       setHour(hour);
+      setOpen(false);
     }
   };
 
@@ -78,6 +70,7 @@ function TimePickerDigital(props) {
 
     if (min) {
       setMinutes(min);
+      setOpen(false);
     }
   };
 
@@ -86,22 +79,35 @@ function TimePickerDigital(props) {
 
     if (ampm) {
       setAMPM(ampm);
+      setOpen(false);
     }
+  };
+
+  const handleChange = (e) => {
+    console.log("handleChange", e.target.selectionStart);
   };
   return (
     <ParentWrapper ref={ParentREF}>
       <Parent>
         <Input
-          onFocus={() => setOpen(true)}
+          onClick={(e) => console.log("handleChange", e.target.selectionStart)}
+          onFocus={(e) => {
+            setOpen(true);
+          }}
           placeholder="hh:mm aa"
           value={`${hour}:${minutes} ${ampm}`}
+          onChange={handleChange}
         />
-        <Svgwrapper>
+        <Svgwrapper onClick={() => setOpen((pre) => !pre)}>
           <IconClockCircle />
         </Svgwrapper>
       </Parent>
       {open && (
-        <DropDownParent ref={ChildREF}>
+        <DropDownParent
+          style={{ position: "absolute", left: 0, top: "100%" }}
+          ref={ChildREF}
+          hours={hours === 24 ? 2 : 3}
+        >
           <HOURMIN onClick={handleHour}>
             {HoursArray.map((val, index) => (
               <ValueSpan data-hour={val} key={val}>
@@ -116,14 +122,20 @@ function TimePickerDigital(props) {
               </ValueSpan>
             ))}
           </HOURMIN>
-          <HOURMIN onClick={handleAMPM}>
-            {["AM", "PM"].map((val, index) => (
-              <ValueSpan data-ampm={val} key={val}>
-                {val}
-              </ValueSpan>
-            ))}
-          </HOURMIN>
-          <ConformDiv></ConformDiv>
+
+          {hours !== 24 && (
+            <HOURMIN onClick={handleAMPM}>
+              {["AM", "PM"].map((val, index) => (
+                <ValueSpan data-ampm={val} key={val}>
+                  {val}
+                </ValueSpan>
+              ))}
+            </HOURMIN>
+          )}
+
+          <ConformDiv>
+            <OKBTN>OK</OKBTN>
+          </ConformDiv>
         </DropDownParent>
       )}
     </ParentWrapper>
@@ -174,12 +186,11 @@ const Svgwrapper = styled.div`
 `;
 
 const DropDownParent = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
+  background-color: white;
   width: 70%;
   display: grid;
-  grid-template-columns: repeat(3, 33.33%);
+  grid-template-columns: ${(props) =>
+    `repeat(${props.hours}, ${100 / props.hours}%)`};
   grid-template-rows: 150px 50px;
   justify-items: center;
   align-items: center;
@@ -211,7 +222,17 @@ const ConformDiv = styled.div`
   grid-column-end: -1;
   grid-row-start: 2;
   grid-row-end: -1;
-  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
+const OKBTN = styled.button`
+  border-radius: 0;
+  border: none;
+  font-size: 1.2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: transparent;
+  cursor: pointer;
+`;
 export default TimePickerDigital;
