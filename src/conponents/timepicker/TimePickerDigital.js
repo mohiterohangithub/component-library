@@ -84,19 +84,39 @@ function TimePickerDigital(props) {
   };
 
   const handleChange = (e) => {
-    console.log("handleChange", e.target.selectionStart);
+    let range = e.target.selectionStart;
+    if (range >= 0 && range < 3 && e.key) {
+      if (e.key === "Backspace") {
+        setHour("hh");
+      }
+    } else if (range >= 3 && range < 6 && range) {
+    } else if (range >= 6 && range <= 8 && range) {
+    }
+  };
+
+  const handelInputClick = (e) => {
+    let range = e.target.selectionStart;
+    if (range >= 0 && range < 3) {
+      e.target.setSelectionRange(0, 2);
+    } else if (range >= 3 && range < 6 && range) {
+      e.target.setSelectionRange(3, 5);
+    } else if (range >= 6 && range <= 8 && range) {
+      e.target.setSelectionRange(6, 8);
+    }
+    
   };
   return (
     <ParentWrapper ref={ParentREF}>
       <Parent>
         <Input
-          onClick={(e) => console.log("handleChange", e.target.selectionStart)}
+          onKeyDown={handleChange}
+          onClick={handelInputClick}
           onFocus={(e) => {
             setOpen(true);
           }}
           placeholder="hh:mm aa"
           value={`${hour}:${minutes} ${ampm}`}
-          onChange={handleChange}
+          // onChange={handleChange}
         />
         <Svgwrapper onClick={() => setOpen((pre) => !pre)}>
           <IconClockCircle />

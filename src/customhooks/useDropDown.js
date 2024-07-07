@@ -23,7 +23,7 @@ function useDropDown(parentREF, childREF, open) {
   useEffect(() => {
     window.addEventListener("scroll", scrollWindows);
     return () => window.removeEventListener("scroll", scrollWindows);
-  }, [parentREF.current, childREF.current]);
+  }, [parentREF.current, childREF.current, open]);
 }
 
 export default useDropDown;
