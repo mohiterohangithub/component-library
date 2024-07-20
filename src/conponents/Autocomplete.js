@@ -14,7 +14,13 @@ const override = {
   borderColor: "red",
 };
 
-function Autocomplete({ options, loading = true, id }) {
+function Autocomplete({
+  options,
+  loading = true,
+  id,
+  getOptionLabel,
+  getSelectedOption,
+}) {
   const [value, setValue] = useState("");
   const [selectedOption, setSelectedOption] = useState({});
   const [list, setList] = useState([]);
@@ -75,11 +81,23 @@ function Autocomplete({ options, loading = true, id }) {
     Math.min(list.length - 1, Math.floor((scrollTop + 300) / 30)) || 10;
 
   const getValue = (e) => {
-    let val = e.target.getAttribute("data-value");
-    if (val) {
-      setValue(val);
+    let val = e.target.getAttribute("data-value").split("-");
+    if (val[0]) {
+      setValue(val[0]);
+    }
+    if (getSelectedOption && typeof getSelectedOption === "function") {
+      return getSelectedOption(userData[Number(val[1])]);
     }
   };
+
+  const getOptionLabelHandler = (value) => {
+    if (getOptionLabel && typeof getOptionLabel === "function") {
+      return getOptionLabel(value);
+    } else {
+      return Object.values(value)[1];
+    }
+  };
+
   return (
     <ParentWrapper id={id ?? "autocomplete"} ref={PARENTREF}>
       <Parent>
@@ -139,27 +157,25 @@ function Autocomplete({ options, loading = true, id }) {
               overflow: "auto",
             }}
           >
-            {list
-              .slice(startIndex, endIndex + 1)
-              .map(({ first_name, id }, index) => (
-                <div
-                  data-value={first_name}
-                  key={id}
-                  style={{
-                    position: "absolute",
-                    height: "30px",
-                    top: `${(startIndex + index) * 30}px`,
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderBottom: "1px solid black",
-                    cursor: "pointer",
-                  }}
-                >
-                  {first_name}
-                </div>
-              ))}
+            {list.slice(startIndex, endIndex + 1).map((val, index) => (
+              <div
+                data-value={`${getOptionLabelHandler(val)}-${index}`}
+                key={`${getOptionLabelHandler(val)}-${index}`}
+                style={{
+                  position: "absolute",
+                  height: "30px",
+                  top: `${(startIndex + index) * 30}px`,
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderBottom: "1px solid black",
+                  cursor: "pointer",
+                }}
+              >
+                {getOptionLabelHandler(val)}
+              </div>
+            ))}
           </div>
         </DropDownParent>
       )}

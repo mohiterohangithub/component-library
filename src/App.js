@@ -15,6 +15,11 @@ function App() {
 
   const [options , setOptions] = useState(userdata);
 
+
+  const getSelectedOption = (val)=>{
+    console.log('val', val)
+  }
+
   return (
     <div className="App">
       {/* <div>
@@ -199,7 +204,7 @@ function App() {
           characteristics. One of the most important of these is a topic sentence.
         </p>
       </div> */}
-     <Autocomplete options={options} loading={true}/>
+     <Autocomplete options={options} loading={true} getOptionLabel={(val)=> val.email } getSelectedOption={getSelectedOption}  />
 
      {/* <List /> */}
     </div>
