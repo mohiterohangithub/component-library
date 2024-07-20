@@ -1,15 +1,20 @@
 import styled from "styled-components";
 import "./App.css";
+import React,{useState} from "react";
 import Tooltip from "./conponents/Tooltip";
 import Slider from "./conponents/Slider";
 import Poper from "./conponents/Poper";
 import TimePickerDigital from "./conponents/timepicker/TimePickerDigital";
 import Autocomplete from "./conponents/Autocomplete";
 import List from "./conponents/List";
-const arr = [
-  1, 2, 3, 4, 5, 7, 8, 5, 6, 4, 2, 8, 2, 10, 78, 54, 63, 47, 2236, 45,
-];
+
+import userdata from "../src/data/userdata.json"
+
+
 function App() {
+
+  const [options , setOptions] = useState(userdata);
+
   return (
     <div className="App">
       {/* <div>
@@ -194,7 +199,7 @@ function App() {
           characteristics. One of the most important of these is a topic sentence.
         </p>
       </div> */}
-     <Autocomplete/>
+     <Autocomplete options={options} loading={true}/>
 
      {/* <List /> */}
     </div>
