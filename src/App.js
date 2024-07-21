@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import "./App.css";
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Tooltip from "./conponents/Tooltip";
 import Slider from "./conponents/Slider";
 import Poper from "./conponents/Poper";
@@ -8,17 +8,32 @@ import TimePickerDigital from "./conponents/timepicker/TimePickerDigital";
 import Autocomplete from "./conponents/Autocomplete";
 import List from "./conponents/List";
 
-import userdata from "../src/data/userdata.json"
-
+import userdata from "../src/data/userdata.json";
 
 function App() {
+  const [options, setOptions] = useState(userdata);
 
-  const [options , setOptions] = useState(userdata);
+  const getSelectedOption = (val) => {
+    console.log("val", val);
+  };
 
-
-  const getSelectedOption = (val)=>{
-    console.log('val', val)
-  }
+  const renderOptions = (value) => {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          gap: "2px",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <span>{value["first_name"]}</span>
+        <span>{value["gender"]}</span>
+      </div>
+    );
+  };
 
   return (
     <div className="App">
@@ -204,9 +219,15 @@ function App() {
           characteristics. One of the most important of these is a topic sentence.
         </p>
       </div> */}
-     <Autocomplete options={options} loading={true} getOptionLabel={(val)=> val.email } getSelectedOption={getSelectedOption}  />
+      <Autocomplete
+        options={options}
+        loading={true}
+        getOptionLabel={(val) => val["first_name"]}
+        getSelectedOption={getSelectedOption}
+        renderOptions={renderOptions}
+      />
 
-     {/* <List /> */}
+      {/* <List /> */}
     </div>
   );
 }

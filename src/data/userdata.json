@@ -1,5 +1,5 @@
-[{"id":1,"first_name":"Lorelle","email":"llieb0@hatena.ne.jp","gender":"Female"},
-{"id":2,"first_name":"Hendrik","email":"htrousdale1@archive.org","gender":"Male"},
+[{"id":1,"first_name":"Lorelle","email":"llieb0@hatena.ne.jp","gender":"Female","disabled":true},
+{"id":2,"first_name":"Hendrik","email":"htrousdale1@archive.org","gender":"Male", "disabled":true},
 {"id":3,"first_name":"Ron","email":"rayres2@utexas.edu","gender":"Male"},
 {"id":4,"first_name":"Noel","email":"nbrimilcombe3@wix.com","gender":"Male"},
 {"id":5,"first_name":"Maura","email":"mwhitfield4@dyndns.org","gender":"Female"},

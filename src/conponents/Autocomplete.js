@@ -20,6 +20,7 @@ function Autocomplete({
   id,
   getOptionLabel,
   getSelectedOption,
+  renderOptions,
 }) {
   const [value, setValue] = useState("");
   const [selectedOption, setSelectedOption] = useState({});
@@ -80,13 +81,16 @@ function Autocomplete({
   const endIndex =
     Math.min(list.length - 1, Math.floor((scrollTop + 300) / 30)) || 10;
 
-  const getValue = (e) => {
-    let val = e.target.getAttribute("data-value").split("-");
-    if (val[0]) {
-      setValue(val[0]);
+  const getValue = (val) => {
+    if (val) {
+      setValue(Object.values(val)[1]);
     }
-    if (getSelectedOption && typeof getSelectedOption === "function") {
-      return getSelectedOption(userData[Number(val[1])]);
+    if (
+      getSelectedOption &&
+      typeof getSelectedOption === "function" &&
+      !renderOptions
+    ) {
+      return getSelectedOption(val);
     }
   };
 
@@ -149,7 +153,6 @@ function Autocomplete({
           onScroll={handleScroll}
         >
           <div
-            onClick={getValue}
             style={{
               width: "100%",
               position: "relative",
@@ -159,8 +162,10 @@ function Autocomplete({
           >
             {list.slice(startIndex, endIndex + 1).map((val, index) => (
               <div
-                data-value={`${getOptionLabelHandler(val)}-${index}`}
-                key={`${getOptionLabelHandler(val)}-${index}`}
+                data-value={val.id}
+                key={val.id}
+                className={val.disabled ? "disabled" : null}
+                onClick={() => getValue(val)}
                 style={{
                   position: "absolute",
                   height: "30px",
@@ -173,7 +178,9 @@ function Autocomplete({
                   cursor: "pointer",
                 }}
               >
-                {getOptionLabelHandler(val)}
+                {renderOptions && typeof renderOptions === "function"
+                  ? renderOptions(val)
+                  : getOptionLabelHandler(val)}
               </div>
             ))}
           </div>
