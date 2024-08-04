@@ -21,6 +21,7 @@ function Autocomplete({
   getOptionLabel,
   getSelectedOption,
   renderOptions,
+  setOptionsLabel
 }) {
   const [value, setValue] = useState("");
   const [selectedOption, setSelectedOption] = useState({});
@@ -82,9 +83,16 @@ function Autocomplete({
     Math.min(list.length - 1, Math.floor((scrollTop + 300) / 30)) || 10;
 
   const getValue = (val) => {
-    if (val) {
+    if (val && !setOptionsLabel) {
       setValue(Object.values(val)[1]);
     }
+    
+    if(val && setOptionsLabel && typeof setOptionsLabel === "function")
+    {
+      let value = setOptionsLabel(val)
+      setValue(value);
+    }
+
     if (
       getSelectedOption &&
       typeof getSelectedOption === "function" &&
